@@ -1,24 +1,25 @@
 import json
-
+import requests
 
 def ayudantia_serverless(event, context):
+
+    # Obtenemos la ip desde el event
+    ip = event['queryStringParameters']['ip']
+
+    # Creamos la URL para hacer la consulta
+    URL = f"http://ip-api.com/json/{ip}"
+
+    # Hacemos la consulta a la API
+    response = requests.get(URL)
+
+    # Obtenemos el JSON de la respuesta
+    json_return = response.json()
+
+    # Creamos el body de la respuesta
     body = {
-        "message": "Go Serverless v1.0! Your function executed successfully!",
-        "input": event
+        'status': 200,
+        'data': json_return
     }
 
-    response = {
-        "statusCode": 200,
-        "body": json.dumps(body)
-    }
-
-    return response
-
-    # Use this code if you don't use the http event with the LAMBDA-PROXY
-    # integration
-    """
-    return {
-        "message": "Go Serverless v1.0! Your function executed successfully!",
-        "event": event
-    }
-    """
+    # Retornamos la respuesta
+    return body
